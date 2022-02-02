@@ -1,0 +1,19 @@
+ {% extends 'base.html' %}
+ {% block title %}
+ Resposta
+ {% endblock title %}
+ {% block content %}
+ <h1>Sua Solicitação foi respondida</h1>
+ <div class="row">
+   </div>
+     <div class="col-md-8">
+         <ul class="list-group">
+            <li class="list-group-item">Cliente: {{Solicitacao.cliente}}</li>
+             <li class="list-group-item">Situação: {{Solicitacao.status}}</li>
+             <li class="list-group-item">Nome do consultor: {{Solicitacao.nome_do_consultor}}</li>
+             <li class="list-group-item">Mensagem: {{Solicitacao.mensagem}}</li>
+             <li class="list-group-item">Resposta: {{Solicitacao.respota}}</li>
+         </ul>
+     </div>
+ </div>
+ {% endblock content %}

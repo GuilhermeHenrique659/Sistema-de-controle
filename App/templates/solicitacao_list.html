@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Listagem de Imoveis
+{% endblock title %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ordenar</h3>
+    </div>
+    <div class="panel-body">
+        <form method="get">
+        <div class="btn-group" role="group">
+            {% with cat=request.GET.ordenar %}
+                <button type="submit" class="btn btn-default {% if cat == 'id' %} disabled {% endif %}"
+                        name="ordenar" value="id">ID</button>
+            {% endwith %}
+        </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+ <form method="get">
+     <div class="col-lg-12">
+     <div class="input-group">
+       <input type="text" class="form-control" name="busca"
+         placeholder="Buscar imoveis">
+       <span class="input-group-btn"><button class="btn btn-default" type="submit">Pesquisar</button>
+       </span>
+     </div>
+     </div>
+ </form>
+ </div>
+<br>
+<div class="col-lg-12">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nome do Consultor</th>
+        <th>Nome do cliente</th>
+      <th>Situação</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for solicitacao in lista %}
+    <tr>
+        <td>{{ solicitacao.id }}</td>
+        <td>{{ solicitacao.nome_do_consultor }}</td>
+        <td>{{ solicitacao.cliente }}</td>
+        {% if solicitacao.status == "Respondido" %}
+      <td class="bg-warning">{{ solicitacao.status }}</td>
+        {% endif %}
+        {% if solicitacao.status == "Concluido" %}
+        <td class="bg-success">{{ solicitacao.status }}</td>
+        {% endif %}
+        {% if solicitacao.status == "Aguardar" %}
+        <td class="bg-danger">{{ solicitacao.status }}</td>
+        {% endif %}
+        <td>
+            {% if request.user.is_superuser %}
+        <a href="{% url 'respota' pk=solicitacao.pk %}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+        </svg>
+            {% endif %}
+            <a href="{% url 'mostra_resposta' pk=solicitacao.pk %}">Ver</a>
+    </tr>
+  {% endfor %}
+      </tbody>
+</table>
+</div>
+<div class="pagination">
+     <span class="step-links">
+         {% if lista.has_previous %}
+             <a href="?page={{ lista.previous_page_number }}">anterior</a>
+         {% endif %}
+         <span class="current">
+             Página {{ lista.number }} de {{ lista.paginator.num_pages }}.
+         </span>
+          {% if lista.has_next %}
+             <a href="?page={{ lista.next_page_number }}">próxima</a>
+         {% endif %}
+     </span>
+ </div>
+{% endif %}
+{% endblock content %}
